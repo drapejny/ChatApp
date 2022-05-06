@@ -1,6 +1,17 @@
 <resources>
-    <string name="app_name">Lab_4</string>
+    <!--    App name-->
+    <string name="app_name">Chat App</string>
+
+    <!--    Menu titles-->
     <string name="title_dialogs">Dialogs</string>
     <string name="title_users">Users</string>
     <string name="title_profile">Profile</string>
+
+<!--    SignIn/SignUp labels-->
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_sign_in">Sign in</string>
+    <string name="label_no_account_question">Don\'t you have an account yet?</string>
+    <string name="label_sign_up">Sign up</string>
+
 </resources>
