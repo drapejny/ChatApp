@@ -1,4 +1,4 @@
-package by.slizh.lab_4.ui.notifications;
+package by.slizh.lab_4.ui.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

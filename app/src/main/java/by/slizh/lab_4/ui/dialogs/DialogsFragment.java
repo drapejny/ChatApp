@@ -1,4 +1,4 @@
-package by.slizh.lab_4.ui.home;
+package by.slizh.lab_4.ui.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

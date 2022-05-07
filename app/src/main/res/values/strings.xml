@@ -7,11 +7,28 @@
     <string name="title_users">Users</string>
     <string name="title_profile">Profile</string>
 
-<!--    SignIn/SignUp labels-->
+    <!--    SignIn/SignUp labels-->
     <string name="label_email">Email</string>
     <string name="label_password">Password</string>
+    <string name="label_first_name">First name</string>
+    <string name="label_last_name">Last name</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_select_birthday">Select birthday</string>
     <string name="label_sign_in">Sign in</string>
     <string name="label_no_account_question">Don\'t you have an account yet?</string>
     <string name="label_sign_up">Sign up</string>
+    <string name="title_registration">Registration</string>
+    <string name="label_add_image">Add image</string>
+
+    <!-- Validation messages-->
+    <string name="msg_validation_email">Invalid email</string>
+    <string name="msg_validation_phone">+375(xx)xxxxxxx</string>
+    <string name="msg_validation_first_name">A-Z,А-Я,max-32</string>
+    <string name="msg_validation_last_name">A-Z,А-Я,max-32</string>
+    <string name="msg_validation_birthday">Select birthday</string>
+    <string name="msg_validation_password">A-Z,0-9,min-6,max-32</string>
+
+    <!-- Toast messages-->
+    <string name="toast_success_sign_up">User has been registered successfully</string>
 
 </resources>

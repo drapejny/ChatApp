@@ -1,4 +1,4 @@
-package by.slizh.lab_4;
+package by.slizh.lab_4.activity;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -14,6 +14,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.Locale;
 
+import by.slizh.lab_4.R;
 import by.slizh.lab_4.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getSupportActionBar().hide();
 
         super.onCreate(savedInstanceState);
 

@@ -1,4 +1,4 @@
-package by.slizh.lab_4;
+package by.slizh.lab_4.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,9 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import java.util.Timer;
-import java.util.TimerTask;
 
-import pl.droidsonroids.gif.GifDrawable;
+import by.slizh.lab_4.R;
 import pl.droidsonroids.gif.GifImageView;
 
 public class SplashScreenActivity extends AppCompatActivity {

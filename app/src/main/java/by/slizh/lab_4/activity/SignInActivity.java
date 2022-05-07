@@ -1,21 +1,19 @@
-package by.slizh.lab_4;
+package by.slizh.lab_4.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import java.util.Locale;
 
+import by.slizh.lab_4.databinding.ActivitySignInBinding;
+
 public class SignInActivity extends AppCompatActivity {
 
-    EditText emailEditText, passwordEditText;
-    Button signInButton;
-    TextView signUpTextView;
+    private ActivitySignInBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +26,19 @@ public class SignInActivity extends AppCompatActivity {
         config.setLocale(locale);
         resources.updateConfiguration(config, resources.getDisplayMetrics());
 
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        signInButton = findViewById(R.id.signInButton);
-        signUpTextView = findViewById(R.id.signUpTextView);
+        getSupportActionBar().hide();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        binding = ActivitySignInBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setListeners();
+    }
+
+    private void setListeners() {
+        binding.signUpTextView.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
+        binding.signInButton.setOnClickListener(v -> {
+            //// TODO: 06.05.2022 добавить логику
+        });
     }
 }

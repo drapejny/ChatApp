@@ -1,4 +1,4 @@
-package by.slizh.lab_4.ui.dashboard;
+package by.slizh.lab_4.ui.users;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

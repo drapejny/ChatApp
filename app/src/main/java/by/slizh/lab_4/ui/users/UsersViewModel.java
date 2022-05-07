@@ -1,16 +1,16 @@
-package by.slizh.lab_4.ui.home;
+package by.slizh.lab_4.ui.users;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DialogsViewModel extends ViewModel {
+public class UsersViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public DialogsViewModel() {
+    public UsersViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is dashboard fragment");
     }
 
     public LiveData<String> getText() {
