@@ -3,6 +3,8 @@ package by.slizh.lab_4.ui.profile;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import by.slizh.lab_4.R;
@@ -64,6 +67,20 @@ public class ProfileFragment extends Fragment {
         });
 
         binding.logOutButton.setOnClickListener(view -> signOut());
+
+        binding.changeLangButton.setOnClickListener(view -> {
+            //// TODO: 08.05.2022 доделать свитч между локалями, а не только на инглишь
+            Locale locale = new Locale("en");
+            Locale.setDefault(locale);
+            Resources resources = this.getResources();
+            Configuration config = resources.getConfiguration();
+            config.setLocale(locale);
+            resources.updateConfiguration(config, resources.getDisplayMetrics());
+
+            Intent intent = getActivity().getIntent();
+            getActivity().finish();
+            startActivity(intent);
+        });
     }
 
     private void loadUserDetails() {

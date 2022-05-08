@@ -29,14 +29,6 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //// TODO: 06.05.2022 убрать
-        Locale locale = new Locale("ru");
-        Locale.setDefault(locale);
-        Resources resources = this.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
-
         getSupportActionBar().hide();
 
         super.onCreate(savedInstanceState);
