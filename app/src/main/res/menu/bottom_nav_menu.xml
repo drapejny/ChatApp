@@ -3,17 +3,14 @@
 
     <item
         android:id="@+id/navigation_dialogs"
-        android:icon="@drawable/message"
-        android:title="TODO" />
+        android:icon="@drawable/message" />
 
     <item
         android:id="@+id/navigation_users"
-        android:icon="@drawable/people"
-        android:title="TODO" />
+        android:icon="@drawable/people" />
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/settings"
-        android:title="TODO" />
+        android:icon="@drawable/settings" />
 
 </menu>

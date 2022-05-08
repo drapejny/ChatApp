@@ -18,14 +18,8 @@ public class DialogsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DialogsViewModel dialogsViewModel =
-                new ViewModelProvider(this).get(DialogsViewModel.class);
-
         binding = FragmentDialogsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textHome;
-        dialogsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

@@ -19,6 +19,13 @@
     <string name="label_sign_up">Sign up</string>
     <string name="title_registration">Registration</string>
     <string name="label_add_image">Add image</string>
+    
+    <!-- Profile labels-->
+    <string name="label_email_dots">Email:</string>
+    <string name="label_phone_dots">Phone:</string>
+    <string name="label_birthday_dots">Birthday:</string>
+    <string name="label_change_language">Change language</string>
+    <string name="label_log_out">Log out</string>
 
     <!-- Validation messages-->
     <string name="msg_validation_email">Invalid email</string>
@@ -30,5 +37,8 @@
 
     <!-- Toast messages-->
     <string name="toast_success_sign_up">User has been registered successfully</string>
+    <string name="toast_unable_sign_in">Unable to sign in</string>
+    <string name="toast_failed_image_upload">Failed to upload image</string>
+    <string name="toast_unable_sign_out">Unable to log out</string>
 
 </resources>

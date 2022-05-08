@@ -18,14 +18,9 @@ public class UsersFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        UsersViewModel usersViewModel =
-                new ViewModelProvider(this).get(UsersViewModel.class);
 
         binding = FragmentUsersBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        final TextView textView = binding.textDashboard;
-        usersViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

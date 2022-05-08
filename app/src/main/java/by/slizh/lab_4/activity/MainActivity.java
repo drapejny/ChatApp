@@ -3,8 +3,12 @@ package by.slizh.lab_4.activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -16,10 +20,13 @@ import java.util.Locale;
 
 import by.slizh.lab_4.R;
 import by.slizh.lab_4.databinding.ActivityMainBinding;
+import by.slizh.lab_4.utils.Constants;
+import by.slizh.lab_4.utils.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
+        getToken();
+
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_dialogs, R.id.navigation_users, R.id.navigation_profile)
                 .build();
@@ -42,4 +50,21 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+
+    private void getToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnSuccessListener(this::updateToken);
+    }
+
+    private void updateToken(String token) {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference =
+                database.collection(Constants.KEY_COLLECTION_USERS)
+                        .document(preferenceManager.getString(Constants.KEY_USER_ID));
+        documentReference.update(Constants.KEY_FCM_TOKEN, token);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
 }

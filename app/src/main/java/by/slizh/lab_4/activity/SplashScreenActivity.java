@@ -22,9 +22,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        getSupportActionBar().hide();
+
         //// TODO: 06.05.2022 Откоментить код ниже (гифка на экране загрузки)
         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
+        finish();
 //
 //        gifImageView = findViewById(R.id.appGif);
 //        ((GifDrawable)gifImageView.getDrawable()).setLoopCount(1);
@@ -39,6 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 //
 //                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
 //                        startActivity(intent);
+//                        finish();
 //                    }
 //                });
 //            }

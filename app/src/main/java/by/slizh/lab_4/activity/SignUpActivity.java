@@ -1,7 +1,6 @@
 package by.slizh.lab_4.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,9 +9,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.RectF;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,18 +18,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import by.slizh.lab_4.R;
 import by.slizh.lab_4.databinding.ActivitySignUpBinding;
-import by.slizh.lab_4.firebase.FireBaseConstants;
+import by.slizh.lab_4.utils.Constants;
 import by.slizh.lab_4.utils.PreferenceManager;
 import by.slizh.lab_4.utils.UserValidator;
 
@@ -88,23 +82,23 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(success -> {
                     FirebaseFirestore database = FirebaseFirestore.getInstance();
                     HashMap<String, Object> user = new HashMap<>();
-                    user.put(FireBaseConstants.KEY_EMAIL, email);
-                    user.put(FireBaseConstants.KEY_PHONE, phone);
-                    user.put(FireBaseConstants.KEY_FIRST_NAME, firstName);
-                    user.put(FireBaseConstants.KEY_LAST_NAME, lastName);
-                    user.put(FireBaseConstants.KEY_BIRTHDAY, birthday);
-                    user.put(FireBaseConstants.KEY_IMAGE, encodedImage);
-                    database.collection(FireBaseConstants.KEY_COLLECTION_USERS)
+                    user.put(Constants.KEY_EMAIL, email);
+                    user.put(Constants.KEY_PHONE, phone);
+                    user.put(Constants.KEY_FIRST_NAME, firstName);
+                    user.put(Constants.KEY_LAST_NAME, lastName);
+                    user.put(Constants.KEY_BIRTHDAY, birthday);
+                    user.put(Constants.KEY_IMAGE, encodedImage);
+                    database.collection(Constants.KEY_COLLECTION_USERS)
                             .add(user)
                             .addOnSuccessListener(documentReference -> {
-                                preferenceManager.putBoolean(FireBaseConstants.KEY_IS_SIGNED_IN, true);
-                                preferenceManager.putString(FireBaseConstants.KEY_USER_ID, documentReference.getId());
-                                preferenceManager.putString(FireBaseConstants.KEY_EMAIL, email);
-                                preferenceManager.putString(FireBaseConstants.KEY_PHONE, phone);
-                                preferenceManager.putString(FireBaseConstants.KEY_FIRST_NAME, firstName);
-                                preferenceManager.putString(FireBaseConstants.KEY_LAST_NAME, lastName);
-                                preferenceManager.putString(FireBaseConstants.KEY_BIRTHDAY, birthday);
-                                preferenceManager.putString(FireBaseConstants.KEY_IMAGE, encodedImage);
+                                preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                preferenceManager.putString(Constants.KEY_EMAIL, email);
+                                preferenceManager.putString(Constants.KEY_PHONE, phone);
+                                preferenceManager.putString(Constants.KEY_FIRST_NAME, firstName);
+                                preferenceManager.putString(Constants.KEY_LAST_NAME, lastName);
+                                preferenceManager.putString(Constants.KEY_BIRTHDAY, birthday);
+                                preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
                                 loading(false);
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -123,11 +117,8 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
