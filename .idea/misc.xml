@@ -5,19 +5,25 @@
       <map>
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1595" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/background_image.xml" value="0.1595" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/border_gray.xml" value="0.1305" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.124" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.124" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1595" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1595" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/online_circle.xml" value="0.1305" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/rounded_edit_text.xml" value="0.1595" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/drawable/rounded_edit_text_gray.xml" value="0.1305" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_sign_in.xml" value="0.264" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_sign_up.xml" value="0.264" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_splash_screen.xml" value="0.22407407407407406" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_user_profile.xml" value="0.264" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/activity_users.xml" value="0.25416666666666665" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/fragment_dashboard.xml" value="0.25416666666666665" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/fragment_dialogs.xml" value="0.11302083333333333" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/fragment_profile.xml" value="0.2" />
-        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/fragment_users.xml" value="0.11302083333333333" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/fragment_users.xml" value="0.4" />
+        <entry key="..\:/Android-projects/Lab_42/app/src/main/res/layout/item_container_user.xml" value="0.536" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/menu/bottom_nav_menu.xml" value="0.264" />
         <entry key="..\:/Android-projects/Lab_42/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.124" />
       </map>

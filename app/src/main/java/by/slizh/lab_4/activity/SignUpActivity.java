@@ -88,6 +88,7 @@ public class SignUpActivity extends AppCompatActivity {
                     user.put(Constants.KEY_LAST_NAME, lastName);
                     user.put(Constants.KEY_BIRTHDAY, birthday);
                     user.put(Constants.KEY_IMAGE, encodedImage);
+                    user.put(Constants.KEY_AVAILABILITY, 0);
                     database.collection(Constants.KEY_COLLECTION_USERS)
                             .add(user)
                             .addOnSuccessListener(documentReference -> {
