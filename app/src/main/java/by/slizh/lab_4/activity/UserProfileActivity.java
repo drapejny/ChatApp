@@ -2,6 +2,7 @@ package by.slizh.lab_4.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,7 +27,14 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+
         binding.backButton.setOnClickListener(view -> onBackPressed());
+
+        binding.sendMsgBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private Bitmap getUserImage(String encodedImage) {

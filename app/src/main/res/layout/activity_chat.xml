@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ChatActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/ibBack"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:background="@drawable/back" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="?android:textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="10sp"
+            android:paddingTop="10sp"
+            android:paddingBottom="10sp"
+            android:text="Activity name"
+            android:textColor="@color/black"
+            android:textSize="26sp"
+            android:textStyle="normal" />
+
+        <ImageView
+            android:id="@+id/galleryImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:src="@drawable/image_gallery"
+            android:visibility="visible"
+            app:tint="@color/blue" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/msgEditText"
+        android:layout_width="310dp"
+        android:layout_height="42dp"
+        android:background="@drawable/rounded_edit_text_gray"
+        android:hint="@string/label_message"
+        android:paddingLeft="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/attachesImage" />
+
+    <ImageView
+        android:id="@+id/attachesImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/attachment"
+        android:layout_marginBottom="@dimen/_2sdp"
+        />
+
+    <ImageView
+        android:id="@+id/sendImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:paddingRight="@dimen/_5sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/msgEditText"
+        app:srcCompat="@drawable/send" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/msgRecycler"
+        android:layout_width="409dp"
+        android:layout_height="606dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/msgEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

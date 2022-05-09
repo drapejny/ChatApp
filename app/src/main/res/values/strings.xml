@@ -42,4 +42,7 @@
     <string name="toast_failed_image_upload">Failed to upload image</string>
     <string name="toast_unable_sign_out">Unable to log out</string>
 
+    <!-- Chat-->
+    <string name="label_message">Message</string>
+
 </resources>
