@@ -15,6 +15,7 @@ import by.slizh.lab_4.utils.Constants;
 public class UserProfileActivity extends AppCompatActivity {
 
     private ActivityUserProfileBinding binding;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         binding.sendMsgBtn.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            intent.putExtra(Constants.KEY_USER, user);
             startActivity(intent);
             finish();
         });
@@ -43,8 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void setUserData() {
-        User user = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
-        System.out.println(user);
+        user = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.imageProfile.setImageBitmap(getUserImage(user.getImage()));
         binding.nameText.setText(user.getFirstName() + " " + user.getLastName());
         binding.emailText.setText(user.getEmail());

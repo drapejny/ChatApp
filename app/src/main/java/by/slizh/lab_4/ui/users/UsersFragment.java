@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -113,6 +112,7 @@ public class UsersFragment extends Fragment implements UserListener {
                                 continue;
                             }
                             User user = new User(
+                                    queryDocumentSnapshot.getId(),
                                     queryDocumentSnapshot.getString(Constants.KEY_EMAIL),
                                     queryDocumentSnapshot.getString(Constants.KEY_PHONE),
                                     queryDocumentSnapshot.getString(Constants.KEY_FIRST_NAME),

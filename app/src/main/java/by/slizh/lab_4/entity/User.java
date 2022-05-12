@@ -6,6 +6,7 @@ import java.util.Objects;
 
 public class User implements Serializable {
 
+    private String id;
     private String email;
     private String phone;
     private String firstName;
@@ -15,7 +16,8 @@ public class User implements Serializable {
     private long availability;
     private String token;
 
-    public User(String email, String phone, String firstName, String lastName, String birthday, String image, long availability, String token) {
+    public User(String id, String email, String phone, String firstName, String lastName, String birthday, String image, long availability, String token) {
+        this.id = id;
         this.email = email;
         this.phone = phone;
         this.firstName = firstName;
@@ -90,23 +92,32 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return availability == user.availability && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(birthday, user.birthday) && Objects.equals(image, user.image) && Objects.equals(token, user.token);
+        return availability == user.availability && Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(phone, user.phone) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(birthday, user.birthday) && Objects.equals(image, user.image) && Objects.equals(token, user.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, phone, firstName, lastName, birthday, image, availability, token);
+        return Objects.hash(id, email, phone, firstName, lastName, birthday, image, availability, token);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
+                "id='" + id + '\'' +
+                ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
