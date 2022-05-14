@@ -23,17 +23,15 @@ import by.slizh.lab_4.databinding.ActivityMainBinding;
 import by.slizh.lab_4.utils.Constants;
 import by.slizh.lab_4.utils.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private ActivityMainBinding binding;
     private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        getSupportActionBar().hide();
-
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         preferenceManager = new PreferenceManager(getApplicationContext());

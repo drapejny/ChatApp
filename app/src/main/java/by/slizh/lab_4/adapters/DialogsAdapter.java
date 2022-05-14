@@ -13,16 +13,20 @@ import java.util.List;
 import by.slizh.lab_4.databinding.ItemContainerDiaologBinding;
 import by.slizh.lab_4.entity.Dialog;
 import by.slizh.lab_4.entity.User;
+import by.slizh.lab_4.listener.UserListener;
 import by.slizh.lab_4.utils.Base64Coder;
 
 public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogViewHolder> {
 
     private final List<Dialog> dialogs;
     private final String userId;
+    private final UserListener userListener;
 
-    public DialogsAdapter(List<Dialog> dialogs, String userId) {
+
+    public DialogsAdapter(List<Dialog> dialogs, String userId, UserListener userListener) {
         this.dialogs = dialogs;
         this.userId = userId;
+        this.userListener = userListener;
     }
 
     @NonNull
@@ -71,6 +75,15 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogVi
             } else {
                 binding.onlineIndicator.setVisibility(View.INVISIBLE);
             }
+
+            //Set on clicked user
+            User user = new User();
+            user.setId(dialog.getUserId());
+            user.setImage(dialog.getUserImage());
+            String[] words = dialog.getUserName().split("\\s");
+            user.setFirstName(words[0]);
+            user.setLastName(words[1]);
+            binding.getRoot().setOnClickListener(view -> userListener.onUserClicked(user));
         }
     }
 }

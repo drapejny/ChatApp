@@ -41,7 +41,6 @@ public class UsersFragment extends Fragment implements UserListener {
         binding.searchImage.callOnClick();
         getUsers();
         setListeners();
-
         View root = binding.getRoot();
         return root;
     }
@@ -98,12 +97,12 @@ public class UsersFragment extends Fragment implements UserListener {
     }
 
     private void getUsers() {
-        loading(true);
+        //loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .get()
                 .addOnCompleteListener(task -> {
-                    loading(false);
+                    //loading(false);
                     String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null) {
                         users = new ArrayList<>();

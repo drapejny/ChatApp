@@ -16,6 +16,9 @@ public class User implements Serializable {
     private long availability;
     private String token;
 
+    public User() {
+    }
+
     public User(String id, String email, String phone, String firstName, String lastName, String birthday, String image, long availability, String token) {
         this.id = id;
         this.email = email;

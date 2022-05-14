@@ -4,9 +4,12 @@ import java.util.Date;
 
 public class ChatMessage {
 
+    private String messageId;
     private String senderId;
     private String receiverId;
     private String message;
+    private String imageName;
+    private String fileName;
     private String dateTime;
     private Date dateObject;
 
@@ -51,4 +54,27 @@ public class ChatMessage {
     }
 
 
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
 }

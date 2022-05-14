@@ -1,28 +1,30 @@
 package by.slizh.lab_4.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -38,15 +40,22 @@ import by.slizh.lab_4.entity.User;
 import by.slizh.lab_4.utils.Constants;
 import by.slizh.lab_4.utils.PreferenceManager;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
 
     private ActivityChatBinding binding;
     private User receiverUser;
-    private String dialogDocument;
     private List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
+    private StorageReference storage;
+    private Uri imageUri;
+    private String imageName;
+    private Uri fileUri;
+    private String fileName;
+
+    private static boolean isOnChatFlag;
+    private static String onChatUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +68,8 @@ public class ChatActivity extends AppCompatActivity {
         setReceiverDetails();
         init();
         listenMessages();
-        System.out.println(chatMessages.size());
+        isOnChatFlag = true;
+        onChatUserId = receiverUser.getId();
 
     }
 
@@ -67,6 +77,39 @@ public class ChatActivity extends AppCompatActivity {
         binding.backButton.setOnClickListener(view -> onBackPressed());
 
         binding.sendImage.setOnClickListener(view -> sendMessage());
+
+        binding.attachesImage.setOnClickListener(view -> {
+            binding.msgImageFrameLayout.setVisibility(View.VISIBLE);
+            binding.msgFileFrameLayout.setVisibility(View.VISIBLE);
+        });
+
+        binding.msgSelectedImage.setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImage.launch(intent);
+        });
+
+        binding.msgSelectedFile.setOnClickListener(view -> {
+            Intent intent = new Intent();
+            //// TODO: 14.05.2022 изменить с пдф на все файлы
+            intent.setType("application/pdf");
+            intent.setAction(intent.ACTION_GET_CONTENT);
+            pickFile.launch(intent);
+        });
+
+        binding.msgImageDeleteCross.setOnClickListener(view -> {
+            imageUri = null;
+            imageName = null;
+            binding.msgSelectedImage.setImageResource(R.drawable.image_gallery);
+            binding.msgImageFrameLayout.setVisibility(View.GONE);
+        });
+
+        binding.msgFileDeleteCross.setOnClickListener(view -> {
+            fileUri = null;
+            fileName = null;
+            binding.fileName.setText(null);
+            binding.msgFileFrameLayout.setVisibility(View.GONE);
+        });
     }
 
     private void init() {
@@ -80,19 +123,30 @@ public class ChatActivity extends AppCompatActivity {
         );
         binding.msgRecycler.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance().getReference();
     }
 
     private void sendMessage() {
         //// TODO: 12.05.2022 добавить фотки и файлы в сообщение
-        HashMap<String, Object> message = new HashMap<>();
-        message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
-        message.put(Constants.KEY_RECEIVER_ID, receiverUser.getId());
-        message.put(Constants.KEY_MESSAGE, binding.msgEditText.getText().toString());
-        message.put(Constants.KEY_TIMESTAMP, new Date());
-        message.put(Constants.KEY_IS_VIEWED, false);
-        database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-        updateDialog(message);
-        binding.msgEditText.setText(null);
+        if (!binding.msgEditText.getText().toString().isEmpty()) {
+            HashMap<String, Object> message = new HashMap<>();
+            message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
+            message.put(Constants.KEY_RECEIVER_ID, receiverUser.getId());
+            message.put(Constants.KEY_MESSAGE, binding.msgEditText.getText().toString());
+            message.put(Constants.KEY_TIMESTAMP, new Date());
+            message.put(Constants.KEY_IMAGE_NAME, imageName);
+            message.put(Constants.KEY_FILE_NAME, fileName);
+            database.collection(Constants.KEY_COLLECTION_CHAT)
+                    .add(message)
+                    .addOnSuccessListener(success -> {
+                        if (imageUri != null) {
+                            uploadImage(success.getId());
+                            binding.msgImageFrameLayout.setVisibility(View.GONE);
+                        }
+                    });
+            updateDialog(message);
+            binding.msgEditText.setText(null);
+        }
     }
 
     private void listenMessages() {
@@ -114,13 +168,26 @@ public class ChatActivity extends AppCompatActivity {
             int count = chatMessages.size();
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    ChatMessage chatMessage = new ChatMessage(); //// TODO: 12.05.2022 изменить на конструктор
+                    ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setSenderId(documentChange.getDocument().getString(Constants.KEY_SENDER_ID));
                     chatMessage.setReceiverId(documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID));
                     chatMessage.setMessage(documentChange.getDocument().getString(Constants.KEY_MESSAGE));
                     chatMessage.setDateTime(getReadableDateTime(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP)));
                     chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
+                    chatMessage.setImageName(documentChange.getDocument().getString(Constants.KEY_IMAGE_NAME));
+                    chatMessage.setFileName(documentChange.getDocument().getString(Constants.KEY_FILE_NAME));
+                    chatMessage.setMessageId(documentChange.getDocument().getId());
                     chatMessages.add(chatMessage);
+                    System.out.println("Messages size: " + chatMessages.size());
+
+                    //If message comes, than we label it as viewed
+                    if (documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID)
+                            .equals(preferenceManager.getString(Constants.KEY_USER_ID))) {
+                        //If we are on chat window
+                        if (isOnChatFlag) {
+                            updateDialogOnChat();
+                        }
+                    }
                 }
             }
             Collections.sort(chatMessages, Comparator.comparing(ChatMessage::getDateObject));
@@ -130,10 +197,38 @@ public class ChatActivity extends AppCompatActivity {
                 chatAdapter.notifyItemRangeInserted(chatMessages.size(), chatMessages.size());
                 binding.msgRecycler.smoothScrollToPosition(chatMessages.size() - 1);
             }
-            binding.msgRecycler.setVisibility(View.VISIBLE);
         }
-        binding.progressBar.setVisibility(View.GONE);
     });
+
+    private void updateDialogOnChat() {
+        String senderId = preferenceManager.getString(Constants.KEY_USER_ID);
+        String receiverId = receiverUser.getId();
+        database.collection(Constants.KEY_COLLECTION_DIALOGS)
+                .whereEqualTo(Constants.KEY_FIRST_USER_ID, senderId)
+                .whereEqualTo(Constants.KEY_SECOND_USER_ID, receiverId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            database.collection(Constants.KEY_COLLECTION_DIALOGS)
+                                    .whereEqualTo(Constants.KEY_FIRST_USER_ID, receiverId)
+                                    .whereEqualTo(Constants.KEY_SECOND_USER_ID, senderId)
+                                    .get()
+                                    .addOnCompleteListener(task1 -> {
+                                        DocumentSnapshot document = task1.getResult().getDocuments().get(0);
+                                        database.collection(Constants.KEY_COLLECTION_DIALOGS)
+                                                .document(document.getId())
+                                                .update(Constants.KEY_MESSAGE_COUNT, 0);
+                                    });
+                        } else {
+                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                            database.collection(Constants.KEY_COLLECTION_DIALOGS)
+                                    .document(document.getId())
+                                    .update(Constants.KEY_MESSAGE_COUNT, 0);
+                        }
+                    }
+                });
+    }
 
     private void updateDialog(HashMap<String, Object> message) {
         String senderId = preferenceManager.getString(Constants.KEY_USER_ID);
@@ -160,8 +255,8 @@ public class ChatActivity extends AppCompatActivity {
                                             dialog.put(Constants.KEY_SECOND_USER_ID, receiverId);
                                             dialog.put(Constants.KEY_FIRST_USER_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
                                             dialog.put(Constants.KEY_SECOND_USER_IMAGE, receiverUser.getImage());
-                                            dialog.put(Constants.KEY_FIRST_USER_NAME, preferenceManager.getString(Constants.KEY_FIRST_NAME
-                                                    + " " + preferenceManager.getString(Constants.KEY_LAST_NAME)));
+                                            dialog.put(Constants.KEY_FIRST_USER_NAME, preferenceManager.getString(Constants.KEY_FIRST_NAME)
+                                                    + " " + preferenceManager.getString(Constants.KEY_LAST_NAME));
                                             dialog.put(Constants.KEY_SECOND_USER_NAME, receiverUser.getFirstName()
                                                     + " " + receiverUser.getLastName());
                                             dialog.put(Constants.KEY_LAST_MESSAGE, message.get(Constants.KEY_MESSAGE));
@@ -206,6 +301,43 @@ public class ChatActivity extends AppCompatActivity {
                 });
     }
 
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        String filePath = result.getData().getData().getPath();
+                        imageName = filePath.substring(filePath.lastIndexOf("/") + 1);
+                        Picasso.with(this).load(imageUri).into(binding.msgSelectedImage);
+                    }
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<Intent> pickFile = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        fileUri = result.getData().getData();
+                        String filePath = result.getData().getData().getPath();
+                        fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+                        binding.fileName.setText(fileName);
+                    }
+                }
+            }
+    );
+
+    private void uploadImage(String documentId) {
+        StorageReference imageRef = storage.child("uploads/" + documentId + "/image/" + imageName);
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    chatAdapter.notifyDataSetChanged();
+                    imageUri = null;
+                    imageName = null;
+                });
+    }
 
     private Bitmap getBitmapFromEncodedString(String encodedImage) {
         byte[] bytes = Base64.decode(encodedImage, Base64.DEFAULT);
@@ -225,13 +357,13 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        System.out.println("On pause");
         super.onPause();
+        isOnChatFlag = false;
     }
 
     @Override
-    protected void onRestart() {
-        System.out.println("On restart");
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
+        isOnChatFlag = true;
     }
 }

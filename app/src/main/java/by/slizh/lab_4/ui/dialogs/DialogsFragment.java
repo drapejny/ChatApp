@@ -1,5 +1,6 @@
 package by.slizh.lab_4.ui.dialogs;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +20,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import by.slizh.lab_4.activity.ChatActivity;
+import by.slizh.lab_4.activity.UserProfileActivity;
 import by.slizh.lab_4.adapters.DialogsAdapter;
 import by.slizh.lab_4.databinding.FragmentDialogsBinding;
 import by.slizh.lab_4.entity.ChatMessage;
 import by.slizh.lab_4.entity.Dialog;
+import by.slizh.lab_4.entity.User;
+import by.slizh.lab_4.listener.UserListener;
 import by.slizh.lab_4.utils.Constants;
 import by.slizh.lab_4.utils.PreferenceManager;
 
-public class DialogsFragment extends Fragment {
+public class DialogsFragment extends Fragment implements UserListener {
 
     private FragmentDialogsBinding binding;
     private List<Dialog> dialogs;
@@ -46,7 +51,7 @@ public class DialogsFragment extends Fragment {
     private void init() {
         dialogs = new ArrayList<>();
         preferenceManager = new PreferenceManager(getContext());
-        dialogsAdapter = new DialogsAdapter(dialogs, preferenceManager.getString(Constants.KEY_USER_ID));
+        dialogsAdapter = new DialogsAdapter(dialogs, preferenceManager.getString(Constants.KEY_USER_ID), this);
         binding.dialogsRecycler.setAdapter(dialogsAdapter);
         database = FirebaseFirestore.getInstance();
     }
@@ -58,6 +63,10 @@ public class DialogsFragment extends Fragment {
         database.collection(Constants.KEY_COLLECTION_DIALOGS)
                 .whereEqualTo(Constants.KEY_SECOND_USER_ID, preferenceManager.getString(Constants.KEY_USER_ID))
                 .addSnapshotListener(dialogsEventListener);
+    }
+
+    private void listenUserAvailability() {
+
     }
 
     private final EventListener<QuerySnapshot> dialogsEventListener = ((value, error) -> {
@@ -117,5 +126,12 @@ public class DialogsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onUserClicked(User user) {
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra(Constants.KEY_USER, user);
+        startActivity(intent);
     }
 }

@@ -29,6 +29,8 @@ public final class Constants {
     public static final String KEY_FIRST_USER_NAME = "firstUserName";
     public static final String KEY_SECOND_USER_NAME = "secondUserName";
     public static final String KEY_MESSAGE_COUNT = "messageCount";
+    public static final String KEY_IMAGE_NAME = "imageName";
+    public static final String KEY_FILE_NAME = "fileName";
 
 
 }

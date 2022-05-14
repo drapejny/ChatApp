@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/_10sdp"
-    android:background="@drawable/border_gray">
+    android:background="@drawable/border_gray"
+    android:padding="@dimen/_10sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <FrameLayout
             android:id="@+id/imageLayout"
             android:layout_width="wrap_content"
@@ -24,8 +25,8 @@
                 android:layout_width="@dimen/_60sdp"
                 android:layout_height="@dimen/_60sdp"
                 android:background="@drawable/background_image"
-                app:riv_oval="true"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                app:riv_oval="true" />
 
             <ImageView
                 android:id="@+id/online_indicator"
@@ -38,12 +39,13 @@
                 android:visibility="invisible" />
 
         </FrameLayout>
+
         <LinearLayout
             android:layout_width="@dimen/_150sdp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_10sdp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="@dimen/_10sdp"
             app:layout_constraintStart_toEndOf="@+id/imageLayout">
 
             <TextView
@@ -51,34 +53,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_10sdp"
+                android:text="sdfjksdf"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:text="sdfjksdf"/>
+                android:textSize="20sp" />
+
             <TextView
                 android:id="@+id/msgText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
+                android:ellipsize="end"
                 android:maxWidth="@dimen/_150sdp"
-                android:text="sdkjfksdf sdfjsdf sdf sdf sdf sdf sdf sdf k sdfkj sdjkf sdjkf sdfkj sdfkj sdjkf sdfjksdf jksdf jsdfkj sdfkj"
-                android:ellipsize="end"/>
+                android:maxLines="3"
+                android:text="sdkjfksdf sdfjsdf sdf sdf sdf sdf sdf sdf k sdfkj sdjkf sdjkf sdfkj sdfkj sdjkf sdfjksdf jksdf jsdfkj sdfkj" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/msgCountText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/count_msg_circle"
-            android:text="12"
-            android:gravity="center"
             android:layout_marginLeft="@dimen/_30sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            android:visibility="invisible"
-            />
+            android:background="@drawable/count_msg_circle"
+            android:gravity="center"
+            android:text="12"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
     </LinearLayout>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

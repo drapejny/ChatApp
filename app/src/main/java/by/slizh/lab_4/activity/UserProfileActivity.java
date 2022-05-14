@@ -12,7 +12,7 @@ import by.slizh.lab_4.databinding.ActivityUserProfileBinding;
 import by.slizh.lab_4.entity.User;
 import by.slizh.lab_4.utils.Constants;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends BaseActivity {
 
     private ActivityUserProfileBinding binding;
     private User user;
