@@ -49,4 +49,6 @@ public class ChatMessage {
     public void setDateObject(Date dateObject) {
         this.dateObject = dateObject;
     }
+
+
 }

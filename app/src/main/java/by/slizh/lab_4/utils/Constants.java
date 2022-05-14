@@ -19,4 +19,16 @@ public final class Constants {
     public static final String KEY_RECEIVER_ID = "receiverId";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TIMESTAMP = "timestamp";
+    public static final String KEY_IS_VIEWED = "isViewed";
+    public static final String KEY_COLLECTION_DIALOGS = "dialogs";
+    public static final String KEY_LAST_MESSAGE = "lastMessage";
+    public static final String KEY_FIRST_USER_ID = "firstUserId";
+    public static final String KEY_SECOND_USER_ID = "secondUserId";
+    public static final String KEY_FIRST_USER_IMAGE = "firstUserImage";
+    public static final String KEY_SECOND_USER_IMAGE = "secondUserImage";
+    public static final String KEY_FIRST_USER_NAME = "firstUserName";
+    public static final String KEY_SECOND_USER_NAME = "secondUserName";
+    public static final String KEY_MESSAGE_COUNT = "messageCount";
+
+
 }
