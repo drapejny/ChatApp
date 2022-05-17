@@ -1,22 +1,17 @@
 package by.slizh.lab_4.activity;
 
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.Locale;
 
 import by.slizh.lab_4.R;
 import by.slizh.lab_4.databinding.ActivityMainBinding;

@@ -59,7 +59,6 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("On create");
         getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
@@ -119,7 +118,8 @@ public class ChatActivity extends BaseActivity {
                 chatMessages,
                 getBitmapFromEncodedString(preferenceManager.getString(Constants.KEY_IMAGE)),
                 getBitmapFromEncodedString(receiverUser.getImage()),
-                preferenceManager.getString(Constants.KEY_USER_ID)
+                preferenceManager.getString(Constants.KEY_USER_ID),
+                getApplicationContext()
         );
         binding.msgRecycler.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();

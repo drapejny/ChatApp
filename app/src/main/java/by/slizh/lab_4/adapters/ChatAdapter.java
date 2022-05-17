@@ -1,5 +1,7 @@
 package by.slizh.lab_4.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -11,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import by.slizh.lab_4.R;
+import by.slizh.lab_4.activity.ImageActivity;
 import by.slizh.lab_4.databinding.ItemContainerReceivedMsgBinding;
 import by.slizh.lab_4.databinding.ItemContainerSentMsgBinding;
 import by.slizh.lab_4.entity.ChatMessage;
+import by.slizh.lab_4.utils.Constants;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -26,15 +29,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Bitmap senderProfileImage;
     private final Bitmap receiverProfileImage;
     private final String senderId;
+    private final Context context;
 
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
 
-    public ChatAdapter(List<ChatMessage> chatMessages, Bitmap senderProfileImage, Bitmap receiverProfileImage, String senderId) {
+    public ChatAdapter(List<ChatMessage> chatMessages, Bitmap senderProfileImage, Bitmap receiverProfileImage, String senderId, Context context) {
         this.chatMessages = chatMessages;
         this.senderProfileImage = senderProfileImage;
         this.receiverProfileImage = receiverProfileImage;
         this.senderId = senderId;
+        this.context = context;
     }
 
     @NonNull
@@ -46,7 +51,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             LayoutInflater.from(parent.getContext()),
                             parent,
                             false
-                    )
+                    ),
+                    context
             );
         } else {
             return new ReceivedMessageViewHolder(
@@ -54,7 +60,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             LayoutInflater.from(parent.getContext()),
                             parent,
                             false
-                    )
+                    ),
+                    context
             );
         }
     }
@@ -86,10 +93,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class SentMessageViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContainerSentMsgBinding binding;
+        private final Context context;
 
-        SentMessageViewHolder(ItemContainerSentMsgBinding binding) {
+        SentMessageViewHolder(ItemContainerSentMsgBinding binding, Context context) {
             super(binding.getRoot());
             this.binding = binding;
+            this.context = context;
         }
 
         void setData(ChatMessage chatMessage, Bitmap senderProfileImage) {
@@ -112,6 +121,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .addOnSuccessListener(bytes -> {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.messageImage.setImageBitmap(bitmap);
+                            binding.messageImage.setOnClickListener(view -> {
+                                Intent intent = new Intent(context, ImageActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra(Constants.KEY_IMAGE, bytes);
+                                intent.putExtra(Constants.KEY_IMAGE_NAME, chatMessage.getImageName());
+                                context.startActivity(intent);
+                            });
                         })
                         .addOnFailureListener(failure -> System.out.println("FAILURE"));
 
@@ -129,10 +145,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContainerReceivedMsgBinding binding;
+        private final Context context;
 
-        ReceivedMessageViewHolder(ItemContainerReceivedMsgBinding binding) {
+        ReceivedMessageViewHolder(ItemContainerReceivedMsgBinding binding, Context context) {
             super(binding.getRoot());
             this.binding = binding;
+            this.context = context;
         }
 
         void setData(ChatMessage chatMessage, Bitmap receiverProfileImage) {
@@ -156,7 +174,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .addOnSuccessListener(bytes -> {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.messageImage.setImageBitmap(bitmap);
-                            System.out.println("SUCCESS");
+                            binding.messageImage.setOnClickListener(view -> {
+                                Intent intent = new Intent(context, ImageActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra(Constants.KEY_IMAGE, bytes);
+                                intent.putExtra(Constants.KEY_IMAGE_NAME, chatMessage.getImageName());
+                                context.startActivity(intent);
+                            });
                         })
                         .addOnFailureListener(failure -> System.out.println("FAILURE"));
 
