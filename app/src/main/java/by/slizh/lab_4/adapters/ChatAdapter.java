@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import by.slizh.lab_4.R;
 import by.slizh.lab_4.databinding.ItemContainerReceivedMsgBinding;
 import by.slizh.lab_4.databinding.ItemContainerSentMsgBinding;
 import by.slizh.lab_4.entity.ChatMessage;
@@ -92,8 +93,18 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         void setData(ChatMessage chatMessage, Bitmap senderProfileImage) {
-            if (chatMessage.getImageName() != null) {
+            if (chatMessage.isWithImage()) {
                 binding.messageImage.setVisibility(View.VISIBLE);
+                binding.messageImage.setImageResource(R.drawable.image_gallery);
+            } else {
+                binding.messageImage.setVisibility(View.GONE);
+            }
+            if (chatMessage.isWithFile()) {
+                binding.fileLayout.setVisibility(View.VISIBLE);
+            } else {
+                binding.fileLayout.setVisibility(View.GONE);
+            }
+            if (chatMessage.getImageName() != null) {
                 StorageReference imageReference = FirebaseStorage.getInstance()
                         .getReference().child("uploads/" + chatMessage.getMessageId()
                                 + "/image/" + chatMessage.getImageName());
@@ -102,8 +113,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.messageImage.setImageBitmap(bitmap);
                         })
-                .addOnFailureListener(failure -> System.out.println("FAILURE"));
+                        .addOnFailureListener(failure -> System.out.println("FAILURE"));
 
+            }
+            if (chatMessage.getFileName() != null) {
+                binding.attachedFileName.setText(chatMessage.getFileName());
             }
             binding.messageText.setText(chatMessage.getMessage());
             binding.msgTimeText.setText(chatMessage.getDateTime());
@@ -122,7 +136,17 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         void setData(ChatMessage chatMessage, Bitmap receiverProfileImage) {
-            binding.messageImage.setVisibility(View.GONE);
+            if (chatMessage.isWithImage()) {
+                binding.messageImage.setVisibility(View.VISIBLE);
+                binding.messageImage.setImageResource(R.drawable.image_gallery);
+            } else {
+                binding.messageImage.setVisibility(View.GONE);
+            }
+            if (chatMessage.isWithFile()) {
+                binding.fileLayout.setVisibility(View.VISIBLE);
+            } else {
+                binding.fileLayout.setVisibility(View.GONE);
+            }
             if (chatMessage.getImageName() != null) {
                 binding.messageImage.setVisibility(View.VISIBLE);
                 StorageReference imageReference = FirebaseStorage.getInstance()
@@ -132,9 +156,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .addOnSuccessListener(bytes -> {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.messageImage.setImageBitmap(bitmap);
+                            System.out.println("SUCCESS");
                         })
                         .addOnFailureListener(failure -> System.out.println("FAILURE"));
 
+            }
+            if (chatMessage.getFileName() != null) {
+                binding.attachedFileName.setText(chatMessage.getFileName());
             }
             binding.messageText.setText(chatMessage.getMessage());
             binding.msgTimeText.setText(chatMessage.getDateTime());

@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 import by.slizh.lab_4.databinding.ItemContainerDiaologBinding;
@@ -15,6 +17,7 @@ import by.slizh.lab_4.entity.Dialog;
 import by.slizh.lab_4.entity.User;
 import by.slizh.lab_4.listener.UserListener;
 import by.slizh.lab_4.utils.Base64Coder;
+import by.slizh.lab_4.utils.Constants;
 
 public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogViewHolder> {
 
@@ -61,6 +64,8 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogVi
         }
 
         void setData(Dialog dialog) {
+
+            //Set dialog data
             binding.imageProfile.setImageBitmap(Base64Coder.decode(dialog.getUserImage()));
             binding.nameTextView.setText(dialog.getUserName());
             binding.msgText.setText(dialog.getLastMessage());
@@ -76,6 +81,9 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogVi
                 binding.onlineIndicator.setVisibility(View.INVISIBLE);
             }
 
+            //Set online indicator
+            setOnlineIndicator(dialog);
+
             //Set on clicked user
             User user = new User();
             user.setId(dialog.getUserId());
@@ -84,6 +92,20 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.DialogVi
             user.setFirstName(words[0]);
             user.setLastName(words[1]);
             binding.getRoot().setOnClickListener(view -> userListener.onUserClicked(user));
+        }
+
+        private void setOnlineIndicator(Dialog dialog) {
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            database.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(dialog.getUserId())
+                    .get()
+                    .addOnSuccessListener(success -> {
+                        if (success.getLong(Constants.KEY_AVAILABILITY) == 1) {
+                            binding.onlineIndicator.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.onlineIndicator.setVisibility(View.INVISIBLE);
+                        }
+                    });
         }
     }
 }

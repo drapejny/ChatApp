@@ -10,8 +10,13 @@ public class ChatMessage {
     private String message;
     private String imageName;
     private String fileName;
+    private boolean withImage;
+    private boolean withFile;
     private String dateTime;
     private Date dateObject;
+
+    public ChatMessage() {
+    }
 
     public String getSenderId() {
         return senderId;
@@ -76,5 +81,21 @@ public class ChatMessage {
 
     public void setMessageId(String messageId) {
         this.messageId = messageId;
+    }
+
+    public boolean isWithFile() {
+        return withFile;
+    }
+
+    public void setWithFile(boolean withFile) {
+        this.withFile = withFile;
+    }
+
+    public boolean isWithImage() {
+        return withImage;
+    }
+
+    public void setWithImage(boolean withImage) {
+        this.withImage = withImage;
     }
 }

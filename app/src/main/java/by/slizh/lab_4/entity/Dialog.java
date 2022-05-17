@@ -4,11 +4,6 @@ import java.util.Date;
 
 public class Dialog {
 
-    //    private String fistUserId;
-//    private String secondUserId;
-//    private String firstUserImage;
-//    private String secondUserImage;
-//    private String firstUserName;
     private String userId;
     private String userName;
     private String userImage;

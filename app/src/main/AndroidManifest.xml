@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab_4">
         <activity
+            android:name=".activity.ImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ChatActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.UserProfileActivity"
             android:exported="true"

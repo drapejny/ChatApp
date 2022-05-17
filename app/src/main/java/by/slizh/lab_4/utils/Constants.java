@@ -31,6 +31,8 @@ public final class Constants {
     public static final String KEY_MESSAGE_COUNT = "messageCount";
     public static final String KEY_IMAGE_NAME = "imageName";
     public static final String KEY_FILE_NAME = "fileName";
+    public static final String KEY_WITH_IMAGE = "withImage";
+    public static final String KEY_WITH_FILE = "withFile";
 
 
 }

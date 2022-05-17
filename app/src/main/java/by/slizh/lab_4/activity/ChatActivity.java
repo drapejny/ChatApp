@@ -134,14 +134,28 @@ public class ChatActivity extends BaseActivity {
             message.put(Constants.KEY_RECEIVER_ID, receiverUser.getId());
             message.put(Constants.KEY_MESSAGE, binding.msgEditText.getText().toString());
             message.put(Constants.KEY_TIMESTAMP, new Date());
-            message.put(Constants.KEY_IMAGE_NAME, imageName);
-            message.put(Constants.KEY_FILE_NAME, fileName);
+            message.put(Constants.KEY_IMAGE_NAME, null);
+            message.put(Constants.KEY_FILE_NAME, null);
+            if (imageUri != null) {
+                message.put(Constants.KEY_WITH_IMAGE, true);
+            } else {
+                message.put(Constants.KEY_WITH_IMAGE, false);
+            }
+            if (fileUri != null) {
+                message.put(Constants.KEY_WITH_FILE, true);
+            } else {
+                message.put(Constants.KEY_WITH_FILE, false);
+            }
             database.collection(Constants.KEY_COLLECTION_CHAT)
                     .add(message)
                     .addOnSuccessListener(success -> {
                         if (imageUri != null) {
                             uploadImage(success.getId());
                             binding.msgImageFrameLayout.setVisibility(View.GONE);
+                        }
+                        if (fileUri != null) {
+                            uploadFile(success.getId());
+                            binding.msgFileFrameLayout.setVisibility(View.GONE);
                         }
                     });
             updateDialog(message);
@@ -176,9 +190,10 @@ public class ChatActivity extends BaseActivity {
                     chatMessage.setDateObject(documentChange.getDocument().getDate(Constants.KEY_TIMESTAMP));
                     chatMessage.setImageName(documentChange.getDocument().getString(Constants.KEY_IMAGE_NAME));
                     chatMessage.setFileName(documentChange.getDocument().getString(Constants.KEY_FILE_NAME));
+                    chatMessage.setWithImage(documentChange.getDocument().getBoolean(Constants.KEY_WITH_IMAGE));
+                    chatMessage.setWithFile(documentChange.getDocument().getBoolean(Constants.KEY_WITH_FILE));
                     chatMessage.setMessageId(documentChange.getDocument().getId());
                     chatMessages.add(chatMessage);
-                    System.out.println("Messages size: " + chatMessages.size());
 
                     //If message comes, than we label it as viewed
                     if (documentChange.getDocument().getString(Constants.KEY_RECEIVER_ID)
@@ -189,7 +204,36 @@ public class ChatActivity extends BaseActivity {
                         }
                     }
                 }
+
+                // If image or file was finally uploaded to storage
+                // and imageName or fileName was changed from null
+                if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
+                    if (documentChange.getDocument().getString(Constants.KEY_IMAGE_NAME) != null) {
+                        String imageName = documentChange.getDocument().getString(Constants.KEY_IMAGE_NAME);
+                        ChatMessage updatedMessage = chatMessages.stream()
+                                .filter(message -> message.getMessageId()
+                                        .equals(documentChange.getDocument().getId()))
+                                .findFirst()
+                                .get();
+                        updatedMessage.setFileName(imageName);
+                        //// TODO: 17.05.2022 FUCKING ANDROID ЧТО НОТИФАИТЬ ДЛЯ ИЗМЕНЕНИЯ Я НЕ ПОНИМАЮ
+                        chatAdapter.notifyItemRangeChanged(chatMessages.size(), chatMessages.size());
+                    }
+                    if (documentChange.getDocument().getString(Constants.KEY_FILE_NAME) != null) {
+                        String fileName = documentChange.getDocument().getString(Constants.KEY_FILE_NAME);
+                        ChatMessage updatedMessage = chatMessages.stream()
+                                .filter(message -> message.getMessageId()
+                                        .equals(documentChange.getDocument().getId()))
+                                .findFirst()
+                                .get();
+                        updatedMessage.setFileName(fileName);
+                        //// TODO: 17.05.2022 FUCKING ANDROID ЧТО НОТИФАИТЬ ДЛЯ ИЗМЕНЕНИЯ Я НЕ ПОНИМАЮ
+                        chatAdapter.notifyItemRangeChanged(chatMessages.size(), chatMessages.size());
+                    }
+                }
             }
+
+            // View updated messages list
             Collections.sort(chatMessages, Comparator.comparing(ChatMessage::getDateObject));
             if (count == 0) {
                 chatAdapter.notifyDataSetChanged();
@@ -242,14 +286,12 @@ public class ChatActivity extends BaseActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().isEmpty()) {
-                            System.out.println("Empty");
                             database.collection(Constants.KEY_COLLECTION_DIALOGS)
                                     .whereEqualTo(Constants.KEY_FIRST_USER_ID, receiverId)
                                     .whereEqualTo(Constants.KEY_SECOND_USER_ID, senderId)
                                     .get()
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.getResult().isEmpty()) {
-                                            System.out.println("Empty");
                                             HashMap<String, Object> dialog = new HashMap<>();
                                             dialog.put(Constants.KEY_FIRST_USER_ID, senderId);
                                             dialog.put(Constants.KEY_SECOND_USER_ID, receiverId);
@@ -265,7 +307,6 @@ public class ChatActivity extends BaseActivity {
                                             dialog.put(Constants.KEY_MESSAGE_COUNT, 1);
                                             database.collection(Constants.KEY_COLLECTION_DIALOGS).add(dialog);
                                         } else {
-                                            System.out.println("Not empty");
                                             HashMap<String, Object> changes = new HashMap<>();
                                             changes.put(Constants.KEY_LAST_MESSAGE, message.get(Constants.KEY_MESSAGE));
                                             changes.put(Constants.KEY_SENDER_ID, senderId);
@@ -333,9 +374,27 @@ public class ChatActivity extends BaseActivity {
         StorageReference imageRef = storage.child("uploads/" + documentId + "/image/" + imageName);
         imageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    chatAdapter.notifyDataSetChanged();
-                    imageUri = null;
-                    imageName = null;
+                    database.collection(Constants.KEY_COLLECTION_CHAT)
+                            .document(documentId)
+                            .update(Constants.KEY_IMAGE_NAME, imageName)
+                            .addOnCompleteListener(complete -> {
+                                imageUri = null;
+                                imageName = null;
+                            });
+                });
+    }
+
+    private void uploadFile(String documentId) {
+        StorageReference imageRef = storage.child("uploads/" + documentId + "/file/" + fileName);
+        imageRef.putFile(fileUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    database.collection(Constants.KEY_COLLECTION_CHAT)
+                            .document(documentId)
+                            .update(Constants.KEY_FILE_NAME, fileName)
+                            .addOnCompleteListener(complete -> {
+                                fileUri = null;
+                                fileName = null;
+                            });
                 });
     }
 

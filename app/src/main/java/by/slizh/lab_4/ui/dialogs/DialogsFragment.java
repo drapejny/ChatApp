@@ -65,10 +65,6 @@ public class DialogsFragment extends Fragment implements UserListener {
                 .addSnapshotListener(dialogsEventListener);
     }
 
-    private void listenUserAvailability() {
-
-    }
-
     private final EventListener<QuerySnapshot> dialogsEventListener = ((value, error) -> {
         if (error != null) {
             return;
@@ -77,7 +73,6 @@ public class DialogsFragment extends Fragment implements UserListener {
             for (DocumentChange documentChange : value.getDocumentChanges()) {
                 QueryDocumentSnapshot document = documentChange.getDocument();
                 if (documentChange.getType() == DocumentChange.Type.ADDED) {
-                    System.out.println("ADDED");
                     Dialog dialog = new Dialog();
                     if (document.get(Constants.KEY_FIRST_USER_ID)
                             .equals(preferenceManager.getString(Constants.KEY_USER_ID))) {
@@ -97,7 +92,6 @@ public class DialogsFragment extends Fragment implements UserListener {
                     dialogs.add(dialog);
                 }
                 if (documentChange.getType() == DocumentChange.Type.MODIFIED) {
-                    System.out.println("MODIFIED");
                     Dialog dialog;
                     if (document.get(Constants.KEY_FIRST_USER_ID)
                             .equals(preferenceManager.getString(Constants.KEY_USER_ID))) {
