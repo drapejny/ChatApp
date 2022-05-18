@@ -43,6 +43,8 @@
     <string name="toast_unable_sign_out">Unable to log out</string>
     <string name="toast_image_uploaded">Image uploaded</string>
     <string name="toast_image_saved">Image saved</string>
+    <string name="toast_file_saved">File saved</string>
+    <string name="toast_failure_save_file">Failed to save file</string>
 
     <!-- Chat-->
     <string name="label_message">Message</string>

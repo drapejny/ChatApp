@@ -1,19 +1,28 @@
 package by.slizh.lab_4.adapters;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import by.slizh.lab_4.R;
@@ -128,12 +137,38 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 intent.putExtra(Constants.KEY_IMAGE_NAME, chatMessage.getImageName());
                                 context.startActivity(intent);
                             });
-                        })
-                        .addOnFailureListener(failure -> System.out.println("FAILURE"));
+                        });
 
             }
             if (chatMessage.getFileName() != null) {
                 binding.attachedFileName.setText(chatMessage.getFileName());
+
+                // Set onClickListener for file to save it to storage
+                binding.fileLayout.setOnClickListener(view -> {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            1);
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), chatMessage.getFileName());
+                    StorageReference imageReference = FirebaseStorage.getInstance()
+                            .getReference().child("uploads/" + chatMessage.getMessageId()
+                                    + "/file/" + chatMessage.getFileName());
+                    imageReference.getBytes(1024 * 1024 * 1024)
+                            .addOnSuccessListener(bytes -> {
+                                try (FileOutputStream fos = new FileOutputStream(file)) {
+                                    fos.write(bytes);
+                                    String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_file_saved);
+                                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                                } catch (IOException e) {
+                                    String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_failure_save_file);
+                                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .addOnFailureListener(failure -> {
+                                String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_failure_save_file);
+                                Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                            });
+                });
             }
             binding.messageText.setText(chatMessage.getMessage());
             binding.msgTimeText.setText(chatMessage.getDateTime());
@@ -174,6 +209,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .addOnSuccessListener(bytes -> {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             binding.messageImage.setImageBitmap(bitmap);
+
+                            // Set onClickListener for image to view it on full screen window
                             binding.messageImage.setOnClickListener(view -> {
                                 Intent intent = new Intent(context, ImageActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -181,12 +218,37 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 intent.putExtra(Constants.KEY_IMAGE_NAME, chatMessage.getImageName());
                                 context.startActivity(intent);
                             });
-                        })
-                        .addOnFailureListener(failure -> System.out.println("FAILURE"));
-
+                        });
             }
             if (chatMessage.getFileName() != null) {
                 binding.attachedFileName.setText(chatMessage.getFileName());
+
+                // Set onClickListener for file to save it to storage
+                binding.fileLayout.setOnClickListener(view -> {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            1);
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), chatMessage.getFileName());
+                    StorageReference imageReference = FirebaseStorage.getInstance()
+                            .getReference().child("uploads/" + chatMessage.getMessageId()
+                                    + "/file/" + chatMessage.getFileName());
+                    imageReference.getBytes(1024 * 1024 * 1024)
+                            .addOnSuccessListener(bytes -> {
+                                try (FileOutputStream fos = new FileOutputStream(file)) {
+                                    fos.write(bytes);
+                                    String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_file_saved);
+                                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                                } catch (IOException e) {
+                                    String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_failure_save_file);
+                                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .addOnFailureListener(failure -> {
+                                String text = chatMessage.getFileName() + " " + context.getResources().getString(R.string.toast_failure_save_file);
+                                Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                            });
+                });
             }
             binding.messageText.setText(chatMessage.getMessage());
             binding.msgTimeText.setText(chatMessage.getDateTime());

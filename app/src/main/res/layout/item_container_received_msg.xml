@@ -50,7 +50,7 @@
             android:background="@color/light_gray"
             android:orientation="horizontal"
             android:padding="@dimen/_5sdp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/_30sdp"

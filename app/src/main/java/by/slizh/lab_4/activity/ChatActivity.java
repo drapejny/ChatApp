@@ -4,11 +4,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.view.View;
 
@@ -23,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,7 +122,7 @@ public class ChatActivity extends BaseActivity {
                 getBitmapFromEncodedString(preferenceManager.getString(Constants.KEY_IMAGE)),
                 getBitmapFromEncodedString(receiverUser.getImage()),
                 preferenceManager.getString(Constants.KEY_USER_ID),
-                getApplicationContext()
+                this
         );
         binding.msgRecycler.setAdapter(chatAdapter);
         database = FirebaseFirestore.getInstance();
@@ -323,7 +326,6 @@ public class ChatActivity extends BaseActivity {
                                         }
                                     });
                         } else {
-                            System.out.println("Not empty");
                             HashMap<String, Object> changes = new HashMap<>();
                             changes.put(Constants.KEY_LAST_MESSAGE, message.get(Constants.KEY_MESSAGE));
                             changes.put(Constants.KEY_SENDER_ID, senderId);
@@ -362,8 +364,10 @@ public class ChatActivity extends BaseActivity {
                 if (result.getResultCode() == RESULT_OK) {
                     if (result.getData() != null) {
                         fileUri = result.getData().getData();
-                        String filePath = result.getData().getData().getPath();
-                        fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+                        Cursor returnCursor = getContentResolver().query(fileUri, null, null, null, null);
+                        int fileNameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                        returnCursor.moveToFirst();
+                        fileName = returnCursor.getString(fileNameIndex);
                         binding.fileName.setText(fileName);
                     }
                 }

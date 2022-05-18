@@ -47,7 +47,8 @@ public class ImageActivity extends AppCompatActivity {
                     "Image",
                     "Saved image"
             );
-            Toast.makeText(getApplicationContext(), R.string.toast_image_saved, Toast.LENGTH_LONG).show();
+            String text = imageName + " " + R.string.toast_image_saved;
+            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
         });
     }
 
